@@ -16,6 +16,11 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("PodeExcluir", policy => policy.RequireClaim("PodeExcluir"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,7 +35,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication();
 
 app.UseAuthorization();
 
