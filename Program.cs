@@ -8,6 +8,7 @@ builder.Services.AddDbContext<AspNetCoreIdentityContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AspNetCoreIdentityContext>();
 
 // Add services to the container.
