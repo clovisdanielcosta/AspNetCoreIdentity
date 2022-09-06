@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreIdentity.Areas.Identity.Data;
+using AspNetCoreIdentity.Extensions;
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AspNetCoreIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'AspNetCoreIdentityContextConnection' not found.");
 
@@ -19,7 +22,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("PodeExcluir", policy => policy.RequireClaim("PodeExcluir"));
+
+    options.AddPolicy("PodeLer", policy => policy.Requirements.Add(new PermissaoNecessaria("PodeLer")));
+    options.AddPolicy("PodeEscrever", policy => policy.Requirements.Add(new PermissaoNecessaria("PodeEscrever")));
 });
+
+builder.Services.AddSingleton<IAuthorizationHandler, PermissaoNecessariaHandler>();
 
 var app = builder.Build();
 
