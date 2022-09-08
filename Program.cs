@@ -4,30 +4,20 @@ using AspNetCoreIdentity.Areas.Identity.Data;
 using AspNetCoreIdentity.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using AspNetCoreIdentity.Config;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("AspNetCoreIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'AspNetCoreIdentityContextConnection' not found.");
 
-builder.Services.AddDbContext<AspNetCoreIdentityContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", true, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
+    .AddEnvironmentVariables();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<AspNetCoreIdentityContext>();
-
-// Add services to the container.
+builder.Services.AddIndentityConfig(builder.Configuration);
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddRazorPages();
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("PodeExcluir", policy => policy.RequireClaim("PodeExcluir"));
-
-    options.AddPolicy("PodeLer", policy => policy.Requirements.Add(new PermissaoNecessaria("PodeLer")));
-    options.AddPolicy("PodeEscrever", policy => policy.Requirements.Add(new PermissaoNecessaria("PodeEscrever")));
-});
-
+builder.Services.AddAuthorizationConfig();
 builder.Services.ResolveDependencies();
 
 var app = builder.Build();
