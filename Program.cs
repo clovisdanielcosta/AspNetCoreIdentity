@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using AspNetCoreIdentity.Areas.Identity.Data;
 using AspNetCoreIdentity.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using AspNetCoreIdentity.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AspNetCoreIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'AspNetCoreIdentityContextConnection' not found.");
@@ -27,7 +28,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("PodeEscrever", policy => policy.Requirements.Add(new PermissaoNecessaria("PodeEscrever")));
 });
 
-builder.Services.AddSingleton<IAuthorizationHandler, PermissaoNecessariaHandler>();
+builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 
