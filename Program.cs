@@ -1,10 +1,4 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using AspNetCoreIdentity.Areas.Identity.Data;
-using AspNetCoreIdentity.Extensions;
-using Microsoft.AspNetCore.Authorization;
 using AspNetCoreIdentity.Config;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
